@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timestamp Converter — Demo</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #11111b;
+      color: #cdd6f4;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      color: #6c7086;
+      font-size: 15px;
+    }
+
+    .instructions {
+      background: #1e1e2e;
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 32px;
+      border-left: 4px solid #a78bfa;
+    }
+
+    .instructions h2 {
+      font-size: 14px;
+      color: #a78bfa;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 10px;
+    }
+
+    .instructions ol {
+      padding-left: 20px;
+      color: #a6adc8;
+      font-size: 14px;
+    }
+
+    .instructions li { margin-bottom: 4px; }
+    .instructions strong { color: #fff; }
+
+    h3 {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #6c7086;
+      margin-bottom: 12px;
+    }
+
+    .section { margin-bottom: 36px; }
+
+    .timestamp-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #1e1e2e;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+
+    .timestamp-row .label {
+      font-size: 11px;
+      color: #6c7086;
+      min-width: 140px;
+      flex-shrink: 0;
+    }
+
+    .timestamp-row .value {
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      font-size: 14px;
+      color: #cdd6f4;
+      user-select: all;
+      cursor: text;
+    }
+
+    .badge {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+    }
+
+    .badge.tz {
+      background: rgba(167, 139, 250, 0.15);
+      color: #a78bfa;
+    }
+
+    .badge.warn {
+      background: rgba(249, 226, 175, 0.15);
+      color: #f9e2af;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #313244;
+      margin: 32px 0;
+    }
+
+    .footer {
+      text-align: center;
+      color: #45475a;
+      font-size: 12px;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🕐 Timestamp Converter Demo</h1>
+      <p>Highlight any timestamp below, right-click, and convert it to your chosen timezone.</p>
+    </div>
+
+    <div class="instructions">
+      <h2>How to use</h2>
+      <ol>
+        <li>Click the <strong>extension icon</strong> in the toolbar to set your target timezone</li>
+        <li><strong>Highlight</strong> any timestamp below by clicking and dragging</li>
+        <li><strong>Right-click</strong> the selection</li>
+        <li>Click <strong>"Convert timestamp →"</strong> in the context menu</li>
+      </ol>
+    </div>
+
+    <div class="section">
+      <h3>With timezone identifier (clean conversion)</h3>
+
+      <div class="timestamp-row">
+        <span class="label">ISO + tz abbrev</span>
+        <span class="value">2026-03-15 23:11:01 UTC</span>
+        <span class="badge tz">UTC</span>
+      </div>
+
+      <div class="timestamp-row">
+        <span class="label">Human-readable</span>
+        <span class="value">Sun 15th Mar 2026 at 23:01:08.044 UTC</span>
+        <span class="badge tz">UTC</span>
+      </div>
+
+      <div class="timestamp-row">
+        <span class="label">ISO 8601 (Z)</span>
+        <span class="value">2026-03-20T14:30:00Z</span>
+        <span class="badge tz">Z</span>
+      </div>
+
+      <div class="timestamp-row">
+        <span class="label">ISO 8601 (offset)</span>
+        <span class="value">2026-03-20T10:30:00-04:00</span>
+        <span class="badge tz">-04:00</span>
+      </div>
+
+      <div class="timestamp-row">
+        <span class="label">Date + time + EST</span>
+        <span class="value">2026-01-15 08:30:00 EST</span>
+        <span class="badge tz">EST</span>
+      </div>
+
+      <div class="timestamp-row">
+        <span class="label">Date + time + PST</span>
+        <span class="value">2026-03-15 17:45:30 PST</span>
+        <span class="badge tz">PST</span>
+      </div>
+
+      <div class="timestamp-row">
+        <span class="label">Date + time + IST</span>
+        <span class="value">2026-03-20 09:15:00 IST</span>
+        <span class="badge tz">IST</span>
+      </div>
+
+      <div class="timestamp-row">
+        <span class="label">Date + time + JST</span>
+        <span class="value">2026-03-20 23:00:00 JST</span>
+        <span class="badge tz">JST</span>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section">
+      <h3>Without timezone (shows warning, assumes UTC)</h3>
+
+      <div class="timestamp-row">
+        <span class="label">Date + time only</span>
+        <span class="value">2026-03-15 23:11:01</span>
+        <span class="badge warn">no tz</span>
+      </div>
+
+      <div class="timestamp-row">
+        <span class="label">Date only</span>
+        <span class="value">2026-03-20</span>
+        <span class="badge warn">no tz</span>
+      </div>
+
+      <div class="timestamp-row">
+        <span class="label">US date format</span>
+        <span class="value">03/20/2026 14:30</span>
+        <span class="badge warn">no tz</span>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section">
+      <h3>Unix timestamps</h3>
+
+      <div class="timestamp-row">
+        <span class="label">Unix seconds</span>
+        <span class="value">1710000000</span>
+        <span class="badge tz">epoch</span>
+      </div>
+
+      <div class="timestamp-row">
+        <span class="label">Unix milliseconds</span>
+        <span class="value">1710000000000</span>
+        <span class="badge tz">epoch</span>
+      </div>
+    </div>
+
+    <div class="footer">
+      Timestamp Converter v2.0 — Open the extension popup to change your target timezone.
+    </div>
+  </div>
+</body>
+</html>

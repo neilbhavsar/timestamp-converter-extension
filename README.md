@@ -2,6 +2,8 @@
 
 A Chrome extension that converts highlighted timestamps to your chosen timezone via the right-click context menu.
 
+![Demo](demo-screenshot.png)
+
 ## Features
 
 - **Configurable timezone** -- click the extension icon to pick from 30+ timezones grouped by region
