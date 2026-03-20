@@ -31,7 +31,7 @@ const TZ_ABBREV_TO_IANA = {
   "GST":  "Asia/Dubai",         "SAST": "Africa/Johannesburg",
   "PKT":  "Asia/Karachi",       "NPT":  "Asia/Kathmandu",
   "MMT":  "Asia/Yangon",        "WIB":  "Asia/Jakarta",
-  "PHT":  "Asia/Manila",        "THA":  "Asia/Bangkok",
+  "PHT":  "Asia/Manila",
 };
 
 const TZ_ABBREV_PATTERN = new RegExp(
@@ -130,12 +130,10 @@ function getTimezoneOffsetMs(ianaTz, atDate) {
   const parts = fmt.formatToParts(atDate);
   const get = (type) => parseInt(parts.find(p => p.type === type).value);
 
-  let hour = get("hour");
-  if (hour === 24) hour = 0;
-
+  // hour12:false can produce hour=24 meaning midnight of the next day
   const localMs = Date.UTC(
     get("year"), get("month") - 1, get("day"),
-    hour, get("minute"), get("second")
+    get("hour"), get("minute"), get("second")
   );
   return localMs - atDate.getTime();
 }
@@ -245,7 +243,7 @@ function convertTimestamp(text, targetTz) {
     if (tz) {
       date = parseFreeformInTimezone(cleaned, tz.iana);
     } else {
-      date = new Date(cleaned);
+      date = parseFreeformInTimezone(cleaned, "UTC");
     }
   }
 
@@ -258,11 +256,6 @@ function convertTimestamp(text, targetTz) {
 
   if (noTz && !/^\d{10,13}$/.test(text)) {
     warning = "No timezone found in selected text — assumed UTC.";
-    const cleanedForUtc = normalizeHumanDate(text);
-    const utcAttempt = new Date(cleanedForUtc + " UTC");
-    if (!isNaN(utcAttempt.getTime())) {
-      date = utcAttempt;
-    }
   }
 
   const formatted = date.toLocaleString("en-US", {
@@ -283,22 +276,28 @@ function convertTimestamp(text, targetTz) {
 /**
  * Parse a freeform date string that Date() can understand, then adjust
  * it from the given source IANA timezone to UTC.
+ *
+ * We force UTC parsing (via " GMT" suffix) so that Date() doesn't apply
+ * the machine's local timezone. This avoids DST-gap issues where
+ * local-time getters would silently shift the hour.
  */
 function parseFreeformInTimezone(dateStr, sourceTz) {
-  // First try: let Date() parse it as-is — if it happens to include
-  // enough info, great. Then we re-anchor to the source timezone.
-  const naive = new Date(dateStr);
-  if (isNaN(naive)) return null;
+  // Append " GMT" to anchor the parse to UTC, preventing local-tz
+  // interpretation. If the string already parses as UTC, great.
+  let naive = new Date(dateStr + " GMT");
+  if (isNaN(naive)) {
+    naive = new Date(dateStr);
+    if (isNaN(naive)) return null;
+  }
 
-  // Build an ISO-ish string from the parsed components so we can
-  // feed it to resolveToUtc as a naive datetime.
-  const y = naive.getFullYear();
-  const mo = String(naive.getMonth() + 1).padStart(2, "0");
-  const d = String(naive.getDate()).padStart(2, "0");
-  const h = String(naive.getHours()).padStart(2, "0");
-  const mi = String(naive.getMinutes()).padStart(2, "0");
-  const s = String(naive.getSeconds()).padStart(2, "0");
-  const ms = String(naive.getMilliseconds()).padStart(3, "0");
+  // Extract UTC components (not local), since we forced a UTC parse
+  const y = naive.getUTCFullYear();
+  const mo = String(naive.getUTCMonth() + 1).padStart(2, "0");
+  const d = String(naive.getUTCDate()).padStart(2, "0");
+  const h = String(naive.getUTCHours()).padStart(2, "0");
+  const mi = String(naive.getUTCMinutes()).padStart(2, "0");
+  const s = String(naive.getUTCSeconds()).padStart(2, "0");
+  const ms = String(naive.getUTCMilliseconds()).padStart(3, "0");
 
   const naiveIso = `${y}-${mo}-${d}T${h}:${mi}:${s}.${ms}`;
   return resolveToUtc(naiveIso, sourceTz);

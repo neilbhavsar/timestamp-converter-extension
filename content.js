@@ -1,8 +1,12 @@
-chrome.runtime.onMessage.addListener((message) => {
-  if (message.action === "showNotification") {
-    showToast(message);
-  }
-});
+if (!window._tsConverterLoaded) {
+  window._tsConverterLoaded = true;
+
+  chrome.runtime.onMessage.addListener((message) => {
+    if (message.action === "showNotification") {
+      showToast(message);
+    }
+  });
+}
 
 function showToast({ original, converted, success, warning, targetTz }) {
   const existing = document.getElementById("ts-converter-toast");
