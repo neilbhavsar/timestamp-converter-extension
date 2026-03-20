@@ -80,7 +80,7 @@ function friendlyTzName(tz) {
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === "convertTimestamp") {
-    chrome.storage.sync.get({ timezone: DEFAULT_TZ }, (data) => {
+    chrome.storage.sync.get({ timezone: DEFAULT_TZ, displayDuration: 5 }, (data) => {
       const selectedText = info.selectionText.trim();
       const result = convertTimestamp(selectedText, data.timezone);
 
@@ -91,7 +91,8 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
         success: result.success,
         warning: result.warning || null,
         targetTz: friendlyTzName(data.timezone),
-        relativeTime: result.relativeTime || null
+        relativeTime: result.relativeTime || null,
+        displayDuration: (data.displayDuration || 5) * 1000
       };
 
       sendToTab(tab.id, payload);

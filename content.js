@@ -8,9 +8,12 @@ if (!window._tsConverterLoaded) {
   });
 }
 
-function showToast({ original, converted, success, warning, targetTz, relativeTime }) {
+function showToast({ original, converted, success, warning, targetTz, relativeTime, displayDuration }) {
   const existing = document.getElementById("ts-converter-toast");
-  if (existing) existing.remove();
+  if (existing) {
+    clearTimeout(existing._timer);
+    existing.remove();
+  }
 
   if (!document.getElementById("ts-converter-style")) {
     const style = document.createElement("style");
@@ -116,7 +119,8 @@ function showToast({ original, converted, success, warning, targetTz, relativeTi
 
   document.getElementById("ts-close-btn").addEventListener("click", () => dismissToast(toast));
 
-  const timer = setTimeout(() => dismissToast(toast), 7000);
+  const duration = displayDuration || 5000;
+  const timer = setTimeout(() => dismissToast(toast), duration);
   toast._timer = timer;
 }
 

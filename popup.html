@@ -102,6 +102,39 @@
       color: #a6adc8;
     }
 
+    .setting-row {
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .setting-row label {
+      margin-bottom: 0;
+      flex-shrink: 0;
+    }
+
+    .duration-input {
+      width: 60px;
+      padding: 6px 8px;
+      background: #181825;
+      color: #cdd6f4;
+      border: 1px solid #313244;
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: inherit;
+      text-align: center;
+      outline: none;
+    }
+
+    .duration-input:focus { border-color: #a78bfa; }
+
+    .duration-unit {
+      font-size: 11px;
+      color: #6c7086;
+    }
+
     .hint {
       margin-top: 14px;
       font-size: 11px;
@@ -155,7 +188,15 @@
     </optgroup>
   </select>
 
-  <div id="saved-msg" class="saved-msg">Timezone saved!</div>
+  <div class="setting-row">
+    <label for="duration-input">Toast display time</label>
+    <div style="display:flex; align-items:center; gap:6px;">
+      <input id="duration-input" class="duration-input" type="number" min="1" max="60" value="5">
+      <span class="duration-unit">sec</span>
+    </div>
+  </div>
+
+  <div id="saved-msg" class="saved-msg">Settings saved!</div>
 
   <div id="current-tz" class="current-tz">
     <div class="dot"></div>
