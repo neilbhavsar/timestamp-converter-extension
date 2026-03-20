@@ -4,11 +4,14 @@ A Chrome extension that converts highlighted timestamps to your chosen timezone 
 
 ![Demo](demo-screenshot.png)
 
+![Settings](popup-screenshot.png)
+
 ## Features
 
 - **Configurable timezone** -- click the extension icon to pick from 30+ timezones grouped by region
+- **Adjustable toast duration** -- set how long the notification stays on screen (1-60 seconds, default 5)
 - **Right-click to convert** -- highlight any timestamp on a page, right-click, and select "Convert timestamp"
-- **Relative time** -- shows how long ago or how far in the future the timestamp is (e.g. "5 days ago (+17 hours)")
+- **Relative time** -- shows how long ago or how far in the future the timestamp is (e.g. "5 days, 2 hours ago")
 - **DST-aware** -- uses the browser's built-in `Intl` API with IANA timezone names, so offsets are always correct
 - **Broad format support** -- parses Unix timestamps, ISO 8601, human-readable dates, and more
 - **Missing timezone warning** -- if the selected text has no timezone identifier, the result includes a warning (assumed UTC)
@@ -35,7 +38,7 @@ Recognized timezone abbreviations include UTC, GMT, EST, EDT, CST, CDT, MST, MDT
 2. Open `chrome://extensions` in Chrome
 3. Enable **Developer mode** (toggle in the top-right)
 4. Click **Load unpacked** and select the `timestamp-converter-extension` folder
-5. The extension icon appears in the toolbar -- click it to choose your target timezone
+5. The extension icon appears in the toolbar -- click it to choose your target timezone and toast duration
 
 ## Usage
 
@@ -58,6 +61,6 @@ Open `demo.html` in Chrome to test all supported formats with the extension inst
 | `manifest.json` | Extension metadata, permissions, content script and popup registration |
 | `background.js` | Service worker -- context menu, timestamp parsing, Intl-based timezone resolution, relative time |
 | `content.js` | Content script -- renders toast notifications on the page |
-| `popup.html` | Timezone selector popup UI |
-| `popup.js` | Saves/loads timezone preference from `chrome.storage.sync` |
+| `popup.html` | Timezone selector and settings popup UI |
+| `popup.js` | Saves/loads timezone and display duration preferences from `chrome.storage.sync` |
 | `demo.html` | Test page with sample timestamps in all supported formats |
