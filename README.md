@@ -8,7 +8,8 @@ A Chrome extension that converts highlighted timestamps to your chosen timezone 
 
 - **Configurable timezone** -- click the extension icon to pick from 30+ timezones grouped by region
 - **Right-click to convert** -- highlight any timestamp on a page, right-click, and select "Convert timestamp"
-- **DST-aware** -- uses the browser's built-in Intl API with IANA timezone names, so offsets are always correct
+- **Relative time** -- shows how long ago or how far in the future the timestamp is (e.g. "5 days ago (+17 hours)")
+- **DST-aware** -- uses the browser's built-in `Intl` API with IANA timezone names, so offsets are always correct
 - **Broad format support** -- parses Unix timestamps, ISO 8601, human-readable dates, and more
 - **Missing timezone warning** -- if the selected text has no timezone identifier, the result includes a warning (assumed UTC)
 
@@ -41,14 +42,22 @@ Recognized timezone abbreviations include UTC, GMT, EST, EDT, CST, CDT, MST, MDT
 1. Highlight a timestamp on any web page
 2. Right-click the selection
 3. Click **"Convert timestamp → ..."** in the context menu
-4. A toast notification appears with the converted time
+4. A toast notification appears with:
+   - The **converted time** in your chosen timezone
+   - A **relative time** showing how far away the timestamp is (e.g. "2 weeks ago (+3 days)")
+   - A **warning** if no timezone was detected in the original text
+
+## Demo Page
+
+Open `demo.html` in Chrome to test all supported formats with the extension installed.
 
 ## Files
 
 | File | Purpose |
 |---|---|
 | `manifest.json` | Extension metadata, permissions, content script and popup registration |
-| `background.js` | Service worker -- context menu, timestamp parsing, Intl-based timezone resolution |
+| `background.js` | Service worker -- context menu, timestamp parsing, Intl-based timezone resolution, relative time |
 | `content.js` | Content script -- renders toast notifications on the page |
 | `popup.html` | Timezone selector popup UI |
 | `popup.js` | Saves/loads timezone preference from `chrome.storage.sync` |
+| `demo.html` | Test page with sample timestamps in all supported formats |

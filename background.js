@@ -90,7 +90,8 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
         converted: result.formatted,
         success: result.success,
         warning: result.warning || null,
-        targetTz: friendlyTzName(data.timezone)
+        targetTz: friendlyTzName(data.timezone),
+        relativeTime: result.relativeTime || null
       };
 
       sendToTab(tab.id, payload);
@@ -258,19 +259,57 @@ function convertTimestamp(text, targetTz) {
     warning = "No timezone found in selected text — assumed UTC.";
   }
 
-  const formatted = date.toLocaleString("en-US", {
-    timeZone: targetTz,
-    weekday: "short",
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    timeZoneName: "short"
-  });
+  let formatted;
+  try {
+    formatted = date.toLocaleString("en-US", {
+      timeZone: targetTz,
+      weekday: "short",
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      timeZoneName: "short"
+    });
+  } catch (_) {
+    return {
+      success: false,
+      formatted: `Invalid target timezone "${targetTz}".\n\nOpen the extension popup and select a valid timezone.`
+    };
+  }
 
-  return { success: true, formatted, warning };
+  const relativeTime = getRelativeTime(date);
+
+  return { success: true, formatted, warning, relativeTime };
+}
+
+function getRelativeTime(date) {
+  const diffMs = date.getTime() - Date.now();
+  const future = diffMs >= 0;
+  let remaining = Math.abs(diffMs);
+
+  const units = [
+    ["year",   365.25 * 24 * 60 * 60 * 1000],
+    ["month",  30.44  * 24 * 60 * 60 * 1000],
+    ["week",   7      * 24 * 60 * 60 * 1000],
+    ["day",    24     * 60 * 60 * 1000],
+    ["hour",   60     * 60 * 1000],
+    ["minute", 60     * 1000],
+  ];
+
+  const parts = [];
+  for (const [unit, ms] of units) {
+    const count = Math.floor(remaining / ms);
+    if (count < 1) continue;
+    parts.push(`${count} ${unit}${count === 1 ? "" : "s"}`);
+    remaining -= count * ms;
+    if (parts.length === 2) break;
+  }
+
+  if (parts.length === 0) return "just now";
+  const label = parts.join(", ");
+  return future ? `${label} from now` : `${label} ago`;
 }
 
 /**

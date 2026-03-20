@@ -8,7 +8,7 @@ if (!window._tsConverterLoaded) {
   });
 }
 
-function showToast({ original, converted, success, warning, targetTz }) {
+function showToast({ original, converted, success, warning, targetTz, relativeTime }) {
   const existing = document.getElementById("ts-converter-toast");
   if (existing) existing.remove();
 
@@ -104,6 +104,12 @@ function showToast({ original, converted, success, warning, targetTz }) {
         white-space:pre-wrap; word-break:break-word;
       ">${escapeHtml(converted)}</div>
     </div>
+
+    ${relativeTime ? `<div style="
+      margin-top:8px; padding:6px 10px; border-radius:6px;
+      background:#181825; display:flex; align-items:center; gap:6px;
+      font-size:12px; color:#a6adc8;
+    ">\u23F3 ${escapeHtml(relativeTime)}</div>` : ""}
   `;
 
   document.body.appendChild(toast);
