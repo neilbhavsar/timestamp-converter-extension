@@ -2,9 +2,9 @@
 
 A Chrome extension that converts highlighted timestamps to your chosen timezone via the right-click context menu.
 
-![Demo](demo-screenshot.png)
+![Demo](demo/demo-screenshot.png)
 
-![Settings](popup-screenshot.png)
+![Settings](demo/popup-screenshot.png)
 
 ## Features
 
@@ -37,7 +37,7 @@ Recognized timezone abbreviations include UTC, GMT, EST, EDT, CST, CDT, MST, MDT
 1. Clone or download this repository
 2. Open `chrome://extensions` in Chrome
 3. Enable **Developer mode** (toggle in the top-right)
-4. Click **Load unpacked** and select the `timestamp-converter-extension` folder
+4. Click **Load unpacked** and select the `src/` folder
 5. The extension icon appears in the toolbar -- click it to choose your target timezone and toast duration
 
 ## Usage
@@ -47,20 +47,39 @@ Recognized timezone abbreviations include UTC, GMT, EST, EDT, CST, CDT, MST, MDT
 3. Click **"Convert timestamp → ..."** in the context menu
 4. A toast notification appears with:
    - The **converted time** in your chosen timezone
-   - A **relative time** showing how far away the timestamp is (e.g. "2 weeks ago (+3 days)")
+   - A **relative time** showing how far away the timestamp is (e.g. "2 weeks, 3 days ago")
    - A **warning** if no timezone was detected in the original text
 
 ## Demo Page
 
-Open `demo.html` in Chrome to test all supported formats with the extension installed.
+Open `demo/demo.html` in Chrome to test all supported formats with the extension installed.
 
-## Files
+## Project Structure
 
-| File | Purpose |
+```
+├── README.md
+├── src/                    ← Load this folder in chrome://extensions
+│   ├── manifest.json
+│   ├── background.js
+│   ├── content.js
+│   ├── popup.html
+│   ├── popup.js
+│   └── icons/
+│       ├── icon16.png
+│       ├── icon48.png
+│       └── icon128.png
+└── demo/
+    ├── demo.html
+    ├── demo-screenshot.png
+    └── popup-screenshot.png
+```
+
+| Path | Purpose |
 |---|---|
-| `manifest.json` | Extension metadata, permissions, content script and popup registration |
-| `background.js` | Service worker -- context menu, timestamp parsing, Intl-based timezone resolution, relative time |
-| `content.js` | Content script -- renders toast notifications on the page |
-| `popup.html` | Timezone selector and settings popup UI |
-| `popup.js` | Saves/loads timezone and display duration preferences from `chrome.storage.sync` |
-| `demo.html` | Test page with sample timestamps in all supported formats |
+| `src/manifest.json` | Extension metadata, permissions, content script and popup registration |
+| `src/background.js` | Service worker -- context menu, timestamp parsing, Intl-based timezone resolution, relative time |
+| `src/content.js` | Content script -- renders toast notifications on the page |
+| `src/popup.html` | Timezone selector and settings popup UI |
+| `src/popup.js` | Saves/loads timezone and display duration preferences from `chrome.storage.sync` |
+| `src/icons/` | Extension icons (16, 48, 128px) |
+| `demo/demo.html` | Test page with sample timestamps in all supported formats |
